@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hunted Skeletal Snake</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      background: radial-gradient(circle, #0f0f3d, #2d002e);
+    }
+
+    /* Style for the snake segments */
+    .segment {
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.8); /* Transparent white */
+      border-radius: 50%;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.7); /* Soft glowing effect */
+      opacity: 0.9;
+    }
+
+    /* Size the segments to make them tapering */
+    #segment0 { width: 20px; height: 20px; } /* Head (Largest) */
+    #segment1 { width: 18px; height: 18px; }
+    #segment2 { width: 16px; height: 16px; }
+    #segment3 { width: 14px; height: 14px; }
+    #segment4 { width: 13px; height: 13px; }
+    #segment5 { width: 12px; height: 12px; }
+    #segment6 { width: 11px; height: 11px; }
+    #segment7 { width: 10px; height: 10px; }
+    #segment8 { width: 9px; height: 9px; }
+    #segment9 { width: 8px; height: 8px; } /* Tail (Smallest) */
+  </style>
+</head>
+<body>
+
+  <!-- Create multiple segments for the snake -->
+  <div id="segment0" class="segment"></div>
+  <div id="segment1" class="segment"></div>
+  <div id="segment2" class="segment"></div>
+  <div id="segment3" class="segment"></div>
+  <div id="segment4" class="segment"></div>
+  <div id="segment5" class="segment"></div>
+  <div id="segment6" class="segment"></div>
+  <div id="segment7" class="segment"></div>
+  <div id="segment8" class="segment"></div>
+  <div id="segment9" class="segment"></div>
+
+  <script>
+    // Get the snake segments in an array
+    const segments = [];
+    for (let i = 0; i < 10; i++) {
+      segments.push(document.getElementById('segment' + i));
+    }
+
+    // Initialize positions for each segment
+    const positions = [];
+    for (let i = 0; i < segments.length; i++) {
+      positions.push({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+    }
+
+    const speed = 0.15; // Speed of movement
+
+    // Function to make each segment follow the previous one smoothly
+    function moveSnake() {
+      for (let i = 1; i < segments.length; i++) {
+        const dx = positions[i - 1].x - positions[i].x;
+        const dy = positions[i - 1].y - positions[i].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        // Only move if distance is greater than a threshold to avoid jittering
+        if (distance > 5) {
+          positions[i].x += dx * speed;
+          positions[i].y += dy * speed;
+        }
+      }
+
+      // Apply the positions to the segments
+      for (let i = 0; i < segments.length; i++) {
+        segments[i].style.transform = `translate(${positions[i].x}px, ${positions[i].y}px)`;
+      }
+
+      requestAnimationFrame(moveSnake); // Continuously update the positions
+    }
+
+    // Event listener to track the mouse movement and move the first segment
+    document.addEventListener('mousemove', function(e) {
+      positions[0].x = e.clientX;
+      positions[0].y = e.clientY;
+    });
+
+    // Start the snake movement
+    moveSnake();
+  </script>
+</body>
+</html>
